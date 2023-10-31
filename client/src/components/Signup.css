@@ -1,0 +1,13 @@
+.errorSection {
+  background-color: rgb(255, 0, 0);
+  border-radius: 20px;
+}
+.horizontal-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.horizontal-scroll-content {
+  display: inline-block;
+}
