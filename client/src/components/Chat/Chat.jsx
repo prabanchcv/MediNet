@@ -8,9 +8,9 @@ import {
     MDBRow,
 } from "mdb-react-ui-kit";
 
-
+import axios from 'axios'
 import { useSocket } from '../../context/socket/socketProvider'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 
@@ -47,34 +47,62 @@ function Chat({ user }) {
 
     useEffect(() => {
         if (selecter) {
+            
             findUserAndDoctor()
         }
     }, [selecter])
+
+    var chatdoc
+    if(user=='doctor')
+    {
+        chatdoc=useParams()
+    }
 
 
     const findUserAndDoctor = async () => {
         try {
             const chatId = selecter.chatRoomId
             if (user === 'user') {
+                console.log(49);
                 const token = localStorage.getItem('userToken');
                 // const axiosInstance = createInstance(token)
                 // const response = await axiosInstance.get(`booking/load-user-chatess/${chatId}`)
-                const response =  await axios
-                .get(import.meta.env.VITE_BASE_URL + `booking/load-user-chatess/${chatId}`, {
-                })
-               
+                const response = await axios.get(import.meta.env.VITE_BASE_URL +  `load-user-chatess/${chatId}`, {
+                    headers: {
+                      Authorization: `Bearer ${token}`
+                    }
+                  })
+
+                
+               console.log(50);
                 if (response.status === 200) {
+                   
                     setDocData(response.data.doctor)
 
                 }
             } else if (user === 'doctor') {
+                console.log(chatdoc.chatId,122);
+                const chatId=chatdoc.chatId
+                console.log(chatId,133);
                 const doctortoken = localStorage.getItem('doctortoken');
                 // const axiosInstance = createInstance(doctortoken);
                 // const response = await axiosInstance.get(`booking/load-doc-chatess/${chatId}`)
-                const response =  await axios
-                .get(import.meta.env.VITE_BASE_URL + `booking/load-doc-chatess/${chatId}`, {
-                })
-                setUsrData(response.data.user)
+                const response = await axios.get(import.meta.env.VITE_BASE_URL +  `doctor/load-doc-chatess/${chatId}`, {
+                    headers: {
+                      Authorization: `Bearer ${doctortoken}`
+                    }
+                  })
+
+             
+                
+                if (response.status === 200) {
+                    console.log(55);
+                    console.log(response.data);
+                    setUsrData(response.data.user)
+                    
+
+                }
+                
             }
         } catch (error) {
             console.log(error);
@@ -115,7 +143,7 @@ function Chat({ user }) {
 
     const closeChat = () => {
         socket.emit('leave-chat', selecter.chatRoomId);
-        navigate(user === 'user' ? '/view-Bookings' : '/doctor/home');
+        navigate(user === 'user' ? '/' : '/doctor/');
     }
 
     return (
@@ -139,16 +167,17 @@ function Chat({ user }) {
                                                 {user === 'user' ? (
                                                     <div className="user-info">
                                                         <div className="user-avatar">
-                                                            <img src={docData.profileimg} alt={docData.name} width="50" height="50" />
+                                                        {/* <img src={`images/${docData.image}`} alt={docData.name} width="50" height="50" /> */}
+
                                                         </div>
                                                         <div className="chat-head-txt">{docData.name ? docData.name : 'Loading'}</div>
                                                     </div>
                                                 ) : (
                                                     <div className="user-info">
                                                         <div className="user-avatar">
-                                                            <img src={usrData.image?usrData.image:usrData.picture} alt={usrData.name} width="50" height="50" />
+                                                            {/* <img src={usrData.image?usrData.image:usrData.picture} alt={usrData.name} width="50" height="50" /> */}
                                                         </div>
-                                                        <div className="chat-head-txt">{usrData.name ? usrData.name : 'Loading'}</div>
+                                                        <div className="chat-head-txt">{usrData.userName ? usrData.userName : 'Loading'}</div>
                                                     </div>
                                                 )}
                                             </div>

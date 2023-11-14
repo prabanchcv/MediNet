@@ -6,6 +6,10 @@ import { FaIdCard } from "react-icons/fa"
 import { useSocket } from '../../context/socket/socketProvider'
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom'
+import DownloadButton from './../downloadSales';
+
+
+
 function DoctorHome() {
 
   const socket = useSocket();
@@ -24,7 +28,7 @@ function DoctorHome() {
 
       Swal.fire({
         title: 'Chat Request',
-        text: `${user.name} Requested a chat , Do you want to join ?`,
+        text: `${user.userName} Requested a chat , Do you want to join ?`,
         icon: 'info',
         showCancelButton: true,
         confirmButtonText: 'Yes',
@@ -33,8 +37,9 @@ function DoctorHome() {
 
         if (result.isConfirmed) {
           socket.emit('join-chat', roomId)
-          console.log(11);
+          console.log(user.userName);
           const handleRoomJoin = () => {
+         
             history(`/doctor/chat/${user._id}`)
           }
           socket.on('chat-connected', handleRoomJoin);
@@ -53,6 +58,7 @@ function DoctorHome() {
           Authorization: `Bearer ${doctorToken}`
         }
       }).then(res => {
+        console.log(res.data);
         setDocAppoint(res.data)
         const inc = res.data.reduce((acc, occ) => {
           return acc = acc + occ.amount
@@ -113,7 +119,9 @@ function DoctorHome() {
           </div>
 
         </div>
+    
         <BarChart appoints={docAppoint} />
+        <div style={{paddingLeft:'40px'}}> Download Sales Report <DownloadButton patients={patients.toString()} income={income.toString()} Appointment={docAppoint} /></div>
       </div>
 
     </>

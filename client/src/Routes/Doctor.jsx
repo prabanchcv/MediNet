@@ -49,7 +49,8 @@ function Doctor() {
           <Route path='/prescriptions' element={<DocMain value="prescription" />} />
           <Route path='/createPrscription' element={<DocMain value="createPrescription" />} />
           <Route path='/patients' element={<DocMain value="patients" />} />
-          <Route path='chat/:chatId' element={<Chat user={'doctor'} />} />
+          <Route path="/chat/:chatId" element={<Chat user={'doctor'} />} />
+
         </Route>
       </Routes>
     </>

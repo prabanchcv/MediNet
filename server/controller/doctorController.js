@@ -446,7 +446,8 @@ const consult = async (req, res) => {
         },
       },
       {
-        $sort: { date: -1, time: 1 },
+        // $sort: { date: -1, time: 1 },
+        $sort: { isAttended:1  },
       },
     ]);
     const data = appointment.filter((app) => new Date(app.date) != new Date());
@@ -567,30 +568,40 @@ const dash = async(req,res)=>{
   }
 }
 
-const docChatEssentials = async (req,res) => {
+const docChatEssentials = async (req, res) => {
+  console.log(2003);
   try {
-      const {chatId} = req.params;
-      const booking = await Appointment.findById(chatId)
-      if (booking) {
-          const doctor = await Doctor.findById(Appointment.doctor)
-          if (doctor) {
-              const user = await Users.findById(Appointment.user)
-              if (user) {
-                  res.status(200).json({ message: 'Booking and doctor data found', doctor,user })
-              } else {
-                  res.status(404).json({ message: 'User data not found' })
-              }
-          } else {
-              res.status(404).json({ message: 'Doctor data not found' })
-          }
-      } else {
-          res.status(404).json({ message: 'Booking data not found' })
-      }
-  } catch (error) {
-      res.status(500).json({ message: 'Internal server error' })
-  }
-}
+    const chatId = req.params.chatId;
+    console.log(chatId);
+    console.log(2003);
 
+    const booking = await Appointment.findOne({ user: chatId }); // Find an appointment for the specified user
+
+    console.log(2004);
+
+    if (booking) {
+      const doctor = await Doctor.findById(booking.doctor); // Find the doctor for this appointment
+
+      if (doctor) {
+        console.log(2005);
+
+        const user = await Users.findById(booking.user); // Find the user associated with this appointment
+        if (user) {
+          console.log(user);
+          res.status(200).json({ message: 'Booking and doctor data found', doctor, user });
+        } else {
+          res.status(404).json({ message: 'User data not found' });
+        }
+      } else {
+        res.status(404).json({ message: 'Doctor data not found' });
+      }
+    } else {
+      res.status(404).json({ message: 'Booking data not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
 const viewDocSchedule = async (req, res) => {

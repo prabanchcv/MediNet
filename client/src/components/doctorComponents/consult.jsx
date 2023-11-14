@@ -1,20 +1,19 @@
-import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
-import { useSocket } from '../../context/socket/socketProvider'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { setSlot } from '../../redux/consult'
-import { setData } from '../../redux/prescriptionData'
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useSocket } from '../../context/socket/socketProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setSlot } from '../../redux/consult';
+import { useCallback} from 'react'
+import { setData } from '../../redux/prescriptionData';
 
 function Consult() {
-    const [consult, setConsult] = useState([])
-    const docToken = localStorage.getItem('doctorToken')
-    const socket = useSocket()
-    const navigate = useNavigate()
-
-    const dispatch = useDispatch()
-    const email = useSelector(state => state.doctor.data.email)
-
+    const [consult, setConsult] = useState([]);
+    const docToken = localStorage.getItem('doctorToken');
+    const socket = useSocket();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const email = useSelector(state => state.doctor.data.email);
 
     useEffect(() => {
         async function datacall() {
@@ -23,15 +22,56 @@ function Consult() {
                     headers: {
                         Authorization: `Bearer ${docToken}`
                     }
-                })
-                console.log(appointData);
-                setConsult(appointData.data)
+                });
+
+                // Filter and update the consult data to include the "expired" status
+                const updatedConsult = appointData.data.map(el => {
+                    const date = new Date();
+                
+                    // Extract the current day
+                    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                    const currentDay = days[date.getDay()];
+                
+                    // Define the order of days of the week
+                    const dayOrder = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                
+                    // Get the indices of the current day and appointment day
+                    const currentDayIndex = dayOrder.indexOf(currentDay);
+                    const appointmentDayIndex = dayOrder.indexOf(el.date);
+                // Format the time
+                    const hours = date.getHours();
+                    const minutes = date.getMinutes();
+                    const period = hours >= 12 ? 'PM' : 'AM';
+
+                    // Convert hours to 12-hour format
+                    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+
+                    // Pad minutes with leading zeros
+                    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+                    const currentTime = `${formattedHours}.${formattedMinutes} ${period}`;
+                    // Compare the indices to check if the appointment has already passed
+                    const isExpired =  (currentDayIndex >appointmentDayIndex || el.time < currentTime) && el.isAttended ==false;
+                   
+                    console.log('Current Day:', currentDay);
+                    console.log('Current Time:', currentTime);
+                    
+                  
+                    // Return the updated element with the "isExpired" status
+                    return {
+                      ...el,
+                      isExpired: isExpired
+                    };
+                  });
+                  
+                  setConsult(updatedConsult);
+                  
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         }
-        datacall()
-    }, [docToken])
+        datacall();
+    }, [docToken]);
 
     const handlePrescribe = useCallback((el) => {
         console.log(el);
@@ -56,16 +96,13 @@ function Consult() {
             socket.off('room:join', handleJoinRoom)
         }
     }, [socket, handleJoinRoom])
-
-
-
     return (
         <div>
             <h1>Consult</h1>
             <div className="bg-white p-3">
                 {consult.length !== 0 ? (
                     consult.map((el) => (
-                        <div className="card mt-3 p-3" key={el.id}>
+                        <div className="card mt-3 p-3" key={el._id}>
                             <div className="row text-center">
                                 <div className="col-sm-6">
                                     <b>
@@ -77,14 +114,36 @@ function Consult() {
                                     <p>{el.time}</p>
                                 </div>
                                 <div className="col-sm-3">
-
-                                    {
-                                        <>
-
-                                            {new Date(el.date) < new Date() ? 'Unavailable' : el.isAttended ? "Attended" : !el.isCancelled ? <> <button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleJoin(el._id, el._id + el.user)}>Join</button></> : 'cancelled'} <br />
-                                            {!el.medicines ? <button className='btn btn-success p-2 mt-1' style={{ fontSize: '14px' }} onClick={() => handlePrescribe(el)}>Prescribe</button> : "Presciption added"}
-                                        </>
-                                    }
+                                    <>
+                                        {el.isExpired
+                                            ? 'Expired'
+                                            : el.isAttended
+                                            ? 'Attended'
+                                            : !el.isCancelled
+                                            ? (
+                                                <>
+                                                    <button
+                                                        style={{ fontSize: "15px" }}
+                                                        className='btn ps-2 pe-2 btn-outline-success'
+                                                        onClick={() => handleJoin(el._id, el._id + el.user)}
+                                                    >
+                                                        Join
+                                                    </button>
+                                                </>
+                                            )
+                                            : 'Cancelled'} <br />
+                                        {!el.medicines
+                                            ? (
+                                                <button
+                                                    className='btn btn-success p-2 mt-1'
+                                                    style={{ fontSize: '14px' }}
+                                                    onClick={() => handlePrescribe(el)}
+                                                >
+                                                    Prescribe
+                                                </button>
+                                            )
+                                            : "Prescription added"}
+                                    </>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +153,7 @@ function Consult() {
                 )}
             </div>
         </div>
-    )
+    );
 }
 
-export default Consult
+export default Consult;

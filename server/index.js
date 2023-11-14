@@ -7,11 +7,17 @@ const adminRoute = require("./Routes/adminRoute");
 const doctorRoute = require("./Routes/doctorRoute");
 const { Server } = require("socket.io");
 const socketManager = require("./config/socket");
+const mongoSanitize= require("express-mongo-sanitize")
+const xss = require("xss-clean")
+
 
 app.use(cors);
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+app.use(mongoSanitize())
+app.use(xss())
 
 app.use("/images", express.static("images"));
 

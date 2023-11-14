@@ -37,6 +37,7 @@ function Presciption() {
       <h1>Prescriptions</h1>
       {
         prescriptions.length != 0 && prescriptions.map((el, index) => {
+       
           return (
             <>
               <div key={index} className="card p-3">

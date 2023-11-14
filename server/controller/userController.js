@@ -55,6 +55,30 @@ const signup = async (req, res) => {
     res.json("error");
   }
 };
+
+const resendOtp= async(req,res)=>{
+  try{
+    const email= req.params.email;
+
+    const user = await User.findOne({email:email});
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    let otp = Math.floor(1000 + Math.random() * 9000);
+    user.otp = otp;
+    user.isVerified=true;
+    await user.save();
+    console.log(otp);
+    await mailSender(user.email, otp, 'signup');
+    res.json({ message: 'OTP resent successfully' });
+
+  }catch(error){
+      res.status(500).json({error:error.message})
+  }
+}
+
+
 const googleSignup = async (req, res) => {
   try {
     const { displayName, email } = req.body;
@@ -371,7 +395,8 @@ const loadAppointments = async (req, res) => {
         },
       },
       {
-        $sort: { date: -1, time: 1 },
+        // $sort: { date: -1, time: 1 },
+        $sort: { isAttended:1  },
       },
     ]);
 
@@ -468,14 +493,20 @@ const prescriptions = async (req, res) => {
 };
 
 
+
 const userChatEssentials = async (req,res) => {
+  console.log(2000);
   try {
       const {chatId} = req.params;
+      console.log(2001);
       const booking = await Appointment.findById(chatId)
+      
       if (booking) {
-          const doctor = await Doctor.findById(Appointment.doctor)
+        
+          const doctor = await Doctor.findById(booking.doctor)
           if (doctor) {
-              const user = await User.findById(Appointment.user)
+            console.log(2002);
+              const user = await User.findById(booking.user)
               if (user) {
                   res.status(200).json({ message: 'Booking and doctor data found', doctor,user })
               } else {
@@ -496,6 +527,7 @@ module.exports = {
   signup,
   googleSignup,
   verify,
+  resendOtp,
   login,
   googleSignin,
   userData,

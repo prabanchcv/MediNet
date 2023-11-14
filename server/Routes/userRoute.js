@@ -28,5 +28,5 @@ userRoute.patch("/verifyOtp",userController.verifyOtp)
 userRoute.patch("/resetPassword",userController.resetPassword)
 userRoute.post("/checkSlot",validateToken,userController.checkSlot)
 userRoute.get('/load-user-chatess/:chatId',validateToken,userController.userChatEssentials);
-
+userRoute.patch('/resendOtp/:email',userController.resendOtp)
 module.exports = userRoute;

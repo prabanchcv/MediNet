@@ -30,48 +30,47 @@ const styles = StyleSheet.create({
 });
 
 MyPDF.propTypes = {
-  data: PropTypes.object,
-  user: PropTypes.object
+  data: PropTypes.string,
+  user: PropTypes.string
 }
 
-function MyPDF({ data, user }) {
+function MyPDF({ patients,income }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-      <view >
+      
+         
+        <View style={styles.container}>
+        <View style={styles.column}>
           <Text >MediNet</Text>
        
-          </view>
-        <View style={styles.container}>
-       
-       
-          <View style={styles.column}>
-            <Text style={styles.label}>Name : {user.userName}</Text>
-            <Text style={styles.label}>Age : {user.age}</Text>
-            <Text style={styles.label}>Gender : {user.gender}</Text>
           </View>
           <View style={styles.column}>
-            <Text style={styles.label}>Doctor : {data.docData[0].name}</Text>
-            <Text style={styles.label}>Date : {data.date}</Text>
-            <Text style={styles.label}>Time : {data.time}</Text>
+            
+          </View>
+       
+          <View style={styles.column}>
+            <Text style={styles.label}>Name : </Text>
+            <Text style={styles.label}>Age :</Text>
+            <Text style={styles.label}>Gender : </Text>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.label}>Doctor : </Text>
+            <Text style={styles.label}>Date : </Text>
+            <Text style={styles.label}>Time :</Text>
           </View>
         </View>
 
         <View>
           <hr />
-          <Text style={styles.prescription}>Prescription</Text>
-          {
-            Object.entries(data.medicines) &&
-            Object.entries(data.medicines).map((el, index) => (
-              <Text style={styles.label} key={index}>
-                {el[0] && el[0]}:{el[1] && el[1]}<br />
-              </Text>
-            ))
-          }
+          <Text style={styles.prescription}>Total Income {income}</Text>
+          <Text style={styles.prescription}> {income}</Text>
+          <Text style={styles.prescription}>Total Patients</Text>
+          <Text style={styles.prescription}> {patients}</Text>
         </View>
       </Page>
     </Document>
-  );
+  );    
 
 }
 
