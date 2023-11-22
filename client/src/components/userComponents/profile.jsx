@@ -71,7 +71,7 @@ function Profile() {
 
     return (
         <div className="row">
-            <form className="mx-auto w-75 setProfile" encType="multipart/form-data">
+            <form className="mx-auto w-75 setProfile border  shadow-lg" encType="multipart/form-data">
                 <div className="text-center text-bold mb-3 mt-3">SET PROFILE</div>
                 <div className="text-center  mb-3 mt-3">
                     {preview != [] ? (

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Proptype from 'prop-types'
@@ -25,6 +25,26 @@ function Login({ value }) {
 
     const dispatch = useDispatch()
     const history = useNavigate()
+
+    useEffect(() => {
+        const userToken = localStorage.getItem("userToken");
+        const Doctoken = localStorage.getItem("doctorToken");
+        const admintoken = localStorage.getItem("adminToken");
+     
+       if(value==='doctor' && Doctoken) {
+        console.log(1222,Doctoken);
+        history('/doctor/')
+       }else
+        if(value==='admin' && admintoken){
+            history('/admin')
+        }else{
+               
+       if (userToken && !value==='doctor' && !value==='admin') {
+        console.log(13333,userToken);
+            history('/')
+       }
+        }
+    },[value]);
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -105,7 +125,8 @@ const submitSignInWithGoogle = async (displayName, email) => {
       const response = await axios.post(import.meta.env.VITE_BASE_URL + 'google/signin', value);
       console.log(response);
       localStorage.setItem('userToken', response.data.token);
-     
+      localStorage.setItem('user', response.data.token);
+     console.log(localStorage.getItem("userToken"));
       dispatch(setUserData(response.data.userData))
       
       setUser(true)
@@ -145,12 +166,12 @@ const submitSignInWithGoogle = async (displayName, email) => {
         <section className="logForm m-5 ">
             <div className="container-fluid h-custom">
                 <div className="row d-flex justify-content-center align-items-center h-100">
-                    <div className="col-md-9 text-center  col-lg-6 col-xl-5">
+                    <div className="col-md-9 text-center  col-lg-6 col-xl-5 ">
                         <img src="/derek-finch-bD1bK7IUvd8-unsplash.jpg"
-                            className="img-fluid logimg mb-3" alt="Sample image" />
+                            className="img-fluid logimg mb-3 " alt="Sample image" />
                     </div>
                     
-                    <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                    <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1 border p-4 shadow-lg text-blue-500">
                     { value!=='admin' && value!=='doctor' && <button className="form-outline mb-4" onClick={signInWithGoogle}>
                         <img src="/googlelogo.png" alt="" style={{ width: '20px' }} /> Signin with Google
                     </button>}

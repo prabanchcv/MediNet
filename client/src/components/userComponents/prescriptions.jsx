@@ -40,10 +40,10 @@ function Presciption() {
        
           return (
             <>
-              <div key={index} className="card p-3">
-                <div className="row">
+              <div key={index} className="card border  shadow-lg  p-3">
+                <div className="row ">
 
-                  <div className="col-md-4">
+                  <div className="col-md-4 ">
                     <h4>{el.docData[0].name}</h4>
                     <h6>{el.date}</h6>
                     <h6>{el.time}</h6>

@@ -56,7 +56,7 @@ function Navbar({ value }) {
                 </div>
                 {
                     value === 'doctor' ? <>
-                        <button className='btn btn-outline-success text-dark doc_nav' onClick={() => history('/doctor/prescriptions')} ><BiNotepad style={{ marginTop: '-7px' }} />Prescriptions</button>
+                        <button className='btn btn-outline-success text-dark doc_nav border  shadow-lg' onClick={() => history('/doctor/prescriptions')} ><BiNotepad style={{ marginTop: '-7px' }} />Prescriptions</button>
                     </>
                         : ''
                 }
@@ -64,11 +64,11 @@ function Navbar({ value }) {
                 <div className='d-flex navMine'>
                     {
                         value === "doctor" ?
-                            <button className="btn  doc btn-outline-success" onClick={() => history('/doctor/consult')}>Consult</button>
+                            <button className="btn  doc btn-outline-success border  shadow-lg " onClick={() => history('/doctor/consult')}>Consult</button>
                             : value === 'admin' ?
                                 <div></div>
                                 :
-                                <button className="btn doc btn-outline-success" onClick={() => history('/findDoctor')}>Doctors</button>
+                                <button className="btn doc btn-outline-success border  shadow-lg"  onClick={() => history('/findDoctor')}>Doctors</button>
                     }
 
                     <div>{'   '}</div>
@@ -87,19 +87,19 @@ function Navbar({ value }) {
 
                         {
                             !value && user ?
-                                <ul className="dropdown-menu right-0" style={{ marginLeft: '-90px', width: '100px', textAlign: 'center' }}>
+                                <ul className="dropdown-menu right-0 " style={{ marginLeft: '-90px', width: '100px', textAlign: 'center' }}>
                                     <li><Link className='link' to={'/profile'} >Profile</Link></li>
                                     <li><Link className='link' onClick={handleLogout}>Logout</Link></li>
                                 </ul>
                                 : value == 'doctor' && doctor ?
-                                    <ul className="dropdown-menu right-0" style={{ marginLeft: '-90px', width: '100px', textAlign: 'center' }}>
+                                    <ul className="dropdown-menu right-0 " style={{ marginLeft: '-90px', width: '100px', textAlign: 'center' }}>
                                         <li><Link className='link' to={'/doctor/setprofile'} >Profile</Link></li>
                                         <li><Link className='link' onClick={handleLogout}>Logout</Link></li>
                                     </ul>
                                     : value == 'admin' && admin ?
                                         <ul className="dropdown-menu right-0" style={{ marginLeft: '-90px', width: '100px', textAlign: 'center' }}>
                                             <li><Link className='link' to={'/admin/appointments'} >Appointments</Link></li>
-                                            <li><Link className='link' onClick={handleLogout}>Logout</Link></li>
+                                            <li><Link className='link ' onClick={handleLogout}>Logout</Link></li>
                                         </ul>
                                         :
                                         <ul className="dropdown-menu right-0" style={{ marginLeft: '-90px', textAlign: 'center' }}>

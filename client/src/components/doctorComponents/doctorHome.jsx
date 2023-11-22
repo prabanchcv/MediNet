@@ -104,15 +104,15 @@ function DoctorHome() {
     <>
       <div className="col-md-9 col-lg-9 m-0">
         <div className='row m-auto' >
-          <div className="col-lg-6">
-            <div className='dataButton m-4'>
+          <div className="col-lg-6  ">
+            <div className='dataButton m-4 border  shadow-lg'>
 
               <h5> <BiRupee /> Total Income</h5>
               <h4> {income && income}</h4>
             </div>
           </div>
-          <div className="col-lg-6">
-            <div className='dataButton m-4'>
+          <div className="col-lg-6 ">
+            <div className='dataButton m-4 border  shadow-lg'>
               <h5><FaIdCard /> Total appointments</h5>
               <h4>{patients && patients}</h4>
             </div>

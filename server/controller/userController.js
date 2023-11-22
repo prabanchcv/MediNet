@@ -230,32 +230,51 @@ const userData = async (req, res) => {
     res.json(userData);
   } catch (error) {}
 };
+// ...
 
 const findDoctors = async (req, res) => {
+
   try {
+    const { page = 2, perPage = 5 } = req.query;
+    console.log(req.query.page,req.query.perPage);
     const docs = await Doctor.aggregate([
       {
         $match: {
-          isApproved: "approved",
+          isApproved: 'approved',
           isBlocked: false,
           isVerified: true,
         },
       },
       {
         $lookup: {
-          from: "departments",
-          localField: "department",
-          foreignField: "_id",
-          as: "doctorData",
+          from: 'departments',
+          localField: 'department',
+          foreignField: '_id',
+          as: 'doctorData',
         },
       },
-    ]);
+    ])
+      .skip((page - 1) * perPage)
+      .limit(perPage);
+
+    const totalDocs = await Doctor.countDocuments({
+      isApproved: 'approved',
+      isBlocked: false,
+      isVerified: true,
+    });
+
     const deps = await Department.find({ isBlocked: false });
-    res.json({ docs, deps });
+    console.log(1111111);
+    res.json({ docs, totalDocs, deps });
   } catch (error) {
-    res.json("error");
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+// ...
+
+
+
 
 const checkSlot = async(req,res)=>{
   const {user,day,time,doctor} = req.body
@@ -353,8 +372,11 @@ const docSchedule = async (req, res) => {
       if (new Date(el.date) < new Date()) {
         await Schedule.deleteOne({ date: el.date });
       }
+    
       return new Date(el.date) >= new Date();
     });
+    console.log(111,new Date());
+    console.log(222,slot);
     res.json(slot);
   } catch (error) {
     res.json("error");
@@ -451,7 +473,7 @@ const searchDoc = async (req, res) => {
             isApproved: 'approved',
             isBlocked: false,
             isVerified: true,
-            name: { $regex: new RegExp(`^${searchKey}`, "i") },
+            name: { $regex: new RegExp(`${searchKey}`, "i") },
           },
         },
         {

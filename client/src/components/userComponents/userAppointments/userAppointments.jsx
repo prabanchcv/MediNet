@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addChatRoomId } from '../../../redux/chatSlice'
 import { useDispatch } from 'react-redux';
+import { format } from 'date-fns';
 
 function UserAppointments() {
 
@@ -16,6 +17,20 @@ function UserAppointments() {
     const [userData, setUserData] = useState(null);
     const email = useSelector(state => state.user.data.email)
 
+   const date = new Date();
+   const formattedDate = format(date, 'dd-MM-yyyy');
+
+   const hours = date.getHours();
+   const minutes = date.getMinutes();
+   const period = hours >= 12 ? 'PM' : 'AM';
+
+   // Convert hours to 12-hour format
+   const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+
+   // Pad minutes with leading zeros
+   const formattedMinutes = minutes.toString().padStart(2, '0');
+
+   const currentTime = `${formattedHours}.${formattedMinutes} ${period}`;
 
     const handleCancelAppointment = useCallback(async (id) => {
         console.log(id);
@@ -110,16 +125,17 @@ function UserAppointments() {
 
     return (
         <>
-            <div className="appoints text-center p-3 m-5">
+            <div className="appoints text-center p-3 m-5 border  shadow-lg ">
                 <h2>Appointments</h2>
                 {appointments ? (appointments.length != 0 &&
                     appointments.map(el => (
-                        <div className="appointCard text-center      mt-3 p-3" key={el._id}>
+                        <div className="appointCard text-center   border  shadow-lg  mt-3 p-3" key={el._id}>
                             <div className="row">
                                 <div className="col-md-4 text-start">
                                     <h4>{el.docData[0].name}</h4>
-                                    <h6 className='subText p-0 m-0'>zsfg</h6>
-                                    <h6 className='subText'>sd</h6>
+                                    <h6 className='subText p-0 m-0'>Qualification:{el.docData[0].qualification}</h6>
+                                    <h6 className='subText'>Gender:{el.docData[0].gender}</h6>
+                                    <h6 className='subText'>Fees:{el.docData[0].fee}</h6>
                                 </div>
                                 <div className="col-md-4">
                                     <h6>Date : {el.date}</h6>
@@ -129,7 +145,7 @@ function UserAppointments() {
                                     {
                                         <>
                                             { } <br />
-                                            {new Date(el.date) < new Date() ? 'Unavailable' : el.isAttended ? "Attended" : !el.isCancelled ? <><button className='btn bg-danger text-white ps-2 pe-2 ' onClick={() => handleCancelAppointment(el._id)} style={{ fontSize: "15px" }}>Cancel</button> <button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleJoin(el._id + el.user)}>Join</button><button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleChat(el._id ,el.doctor)}>Chat</button></> : 'cancelled'}
+                                            { (formattedDate >=el.date || el.time < currentTime) ? 'Expired' : el.isAttended ? "Attended" : !el.isCancelled ? <><button className='btn bg-danger text-white ps-2 pe-2 ' onClick={() => handleCancelAppointment(el._id)} style={{ fontSize: "15px" }}>Cancel</button> <button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleJoin(el._id + el.user)}>Join</button><button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleChat(el._id ,el.doctor)}>Chat</button></> : 'cancelled'}
                                         </>
                                     }
 

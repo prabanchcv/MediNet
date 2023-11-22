@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { setSlot } from '../../redux/consult';
 import { useCallback} from 'react'
 import { setData } from '../../redux/prescriptionData';
+import { format } from 'date-fns';
 
 function Consult() {
     const [consult, setConsult] = useState([]);
@@ -27,17 +28,8 @@ function Consult() {
                 // Filter and update the consult data to include the "expired" status
                 const updatedConsult = appointData.data.map(el => {
                     const date = new Date();
-                
-                    // Extract the current day
-                    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                    const currentDay = days[date.getDay()];
-                
-                    // Define the order of days of the week
-                    const dayOrder = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                
-                    // Get the indices of the current day and appointment day
-                    const currentDayIndex = dayOrder.indexOf(currentDay);
-                    const appointmentDayIndex = dayOrder.indexOf(el.date);
+                    const formattedDate = format(date, 'dd-MM-yyyy');
+                    console.log(formattedDate)
                 // Format the time
                     const hours = date.getHours();
                     const minutes = date.getMinutes();
@@ -51,11 +43,13 @@ function Consult() {
 
                     const currentTime = `${formattedHours}.${formattedMinutes} ${period}`;
                     // Compare the indices to check if the appointment has already passed
-                    const isExpired =  (currentDayIndex >appointmentDayIndex || el.time < currentTime) && el.isAttended ==false;
+                    console.log(el.date);
+                    console.log(formattedDate);
+                    const isExpired =  (formattedDate >=el.date || el.time < currentTime);
                    
-                    console.log('Current Day:', currentDay);
+                  
                     console.log('Current Time:', currentTime);
-                    
+                    console.log('app Time:',el.time);
                   
                     // Return the updated element with the "isExpired" status
                     return {

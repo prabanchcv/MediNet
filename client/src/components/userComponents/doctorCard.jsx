@@ -26,7 +26,7 @@ function DoctorCard({ docData }) {
       <div className="d-flex p-3 flex-wrap gap-3">
         {docData.length > 0 ? (
           docData.map((el, index) => (
-            <div className="m-3 card" style={{ width: '12rem', minHeight: '20rem' }} key={index}>
+            <div className="m-3 card  border  shadow-lg" style={{ width: '12rem', minHeight: '20rem' }} key={index}>
               <div className='m-auto' style={{ width: '100%', height: '10rem' }}>
                 <img style={{ width: '100%', height: '10rem' }} src={import.meta.env.VITE_BASE_URL + `images/${el.image}`} className="card-img-top" alt="..." />
               </div>
@@ -57,3 +57,60 @@ function DoctorCard({ docData }) {
 }
 
 export default DoctorCard;
+
+// import React from 'react';
+// import DataTables from '../dataTables';
+// import { useDispatch } from 'react-redux';
+// import { setDoc } from '../../redux/selectedDoc';
+// import { useNavigate } from 'react-router-dom';
+// import PropTypes from 'prop-types';
+
+// DoctorCard.propTypes = {
+//   docData: PropTypes.array,
+// };
+
+// function DoctorCard({ docData }) {
+//   const dispatch = useDispatch();
+//   const history = useNavigate();
+
+//   const handleCheck = (e) => {
+//     const data = e;
+//     dispatch(setDoc(data));
+//     history('/appointments');
+//   };
+
+//   const columns = [
+//     {
+//       name: 'Image',
+//       selector: (row) => <img src={import.meta.env.VITE_BASE_URL + `images/${row.image}`} alt="Doctor" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />,
+//     },
+//     {
+//       name: 'Name',
+//       selector: (row) => row.name,
+//     },
+//     {
+//       name: 'Qualification',
+//       selector: (row) => row.qualification,
+//     },
+//     {
+//       name: 'Department',
+//       selector: (row) => row.doctorData[0]?.name,
+//     },
+//     {
+//       name: 'Fee',
+//       selector: (row) => `Rs.${row.fee}`,
+//     },
+//     {
+//       name: 'Action',
+//       cell: (row) => <button className="btn btn-outline-success" onClick={() => handleCheck(row)}>Book</button>,
+//     },
+//   ];
+
+//   return (
+//     <>
+//       <DataTables columns={columns} title="Doctors" data={docData} />
+//     </>
+//   );
+// }
+
+// export default DoctorCard;

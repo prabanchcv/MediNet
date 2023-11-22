@@ -35,9 +35,11 @@ function ProfilePageStructure() {
             <div className="col-12 col-md-3">
                 <div className="row text-center">
                     <div className="list-group p-4  mt-5" >
-                        <div className="list-group-item btn btn-outline-success lists list-group-item-action text-wrap text-break" onClick={profileHandle}>Profile</div>
-                        <div className="list-group-item btn btn-outline-success lists list-group-item-action text-wrap text-break" onClick={appointHandle}>Appointments</div>
-                        <div className="list-group-item btn btn-outline-success lists list-group-item-action text-wrap text-break" onClick={prescriptHandle}>Prescriptions</div>
+                        <div className="border  shadow-lg list-group-item btn btn-outline-success lists list-group-item-action text-wrap text-break" onClick={profileHandle}>Profile</div>
+                        <br/>
+                        <div className="border  shadow-lg  list-group-item btn btn-outline-success lists list-group-item-action text-wrap text-break" onClick={appointHandle}>Appointments</div>
+                        <br/>
+                        <div className="border  shadow-lg list-group-item btn btn-outline-success lists list-group-item-action text-wrap text-break" onClick={prescriptHandle}>Prescriptions</div>
                     </div>
                 </div>
             </div>

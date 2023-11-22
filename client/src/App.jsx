@@ -1,14 +1,14 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Doctor from './Routes/doctor';
 import User from "./Routes/User"
 import Admin from './Routes/Admin';
 import useAuth from './hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import { setDoctorData } from './redux/doctorData';
-
+import Loader from './components/loader'
 import { setAdminData } from './redux/adminData';
 
 function App() {
@@ -55,10 +55,16 @@ function App() {
       }
     }
   }, [dispatch, setAdmin, setDoctor])
+  const [loader,setLoader]=useState(true)
+  useEffect(() => {
+    setTimeout(() => {
+      setLoader(false)
+    }, 300);
+  })
 
   return (
     <>
-      <div style={{ minHeight: "95vh" }}>
+       <div style={{ minHeight: "95vh" }}>
         <Router>
           <Routes>
             <Route path='/admin/*' element={<Admin />} />
@@ -66,7 +72,9 @@ function App() {
             <Route path='/*' element={<User />} />
           </Routes>
         </Router>
+      
       </div>
+       
     </>
 
   )

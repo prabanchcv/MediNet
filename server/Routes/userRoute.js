@@ -8,11 +8,9 @@ require("dotenv").config();
 
 userRoute.post("/signup", userController.signup);
 userRoute.post("/google/signup", userController.googleSignup)
-
 userRoute.post("/verify/:email", userController.verify);
 userRoute.post("/login", userController.login);
 userRoute.post("/google/signin", userController.googleSignin)
-
 userRoute.get("/userData", validateToken,authUser, userController.userData);
 userRoute.get("/findDoctors", userController.findDoctors);
 userRoute.get("/departments", userController.departments);
