@@ -145,7 +145,7 @@ function UserAppointments() {
                                     {
                                         <>
                                             { } <br />
-                                            { (formattedDate >=el.date || el.time < currentTime) ? 'Expired' : el.isAttended ? "Attended" : !el.isCancelled ? <><button className='btn bg-danger text-white ps-2 pe-2 ' onClick={() => handleCancelAppointment(el._id)} style={{ fontSize: "15px" }}>Cancel</button> <button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleJoin(el._id + el.user)}>Join</button><button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleChat(el._id ,el.doctor)}>Chat</button></> : 'cancelled'}
+                                            { (formattedDate >=el.date && el.time < currentTime) ? 'Expired' : el.isAttended ? "Attended" : !el.isCancelled ? <><button className='btn bg-danger text-white ps-2 pe-2 ' onClick={() => handleCancelAppointment(el._id)} style={{ fontSize: "15px" }}>Cancel</button> <button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleJoin(el._id + el.user)}>Join</button><button style={{ fontSize: "15px" }} className='btn ps-2 pe-2 btn-outline-success' onClick={() => handleChat(el._id ,el.doctor)}>Chat</button></> : 'cancelled'}
                                         </>
                                     }
 
