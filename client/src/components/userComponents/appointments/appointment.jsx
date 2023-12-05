@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import './appointment.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ function Appointment() {
   const [errMsg, setErrMsg] = useState('');
   const [timeList, setTimeList] = useState(['No data']);
   const [issues, setIssues] = useState('');
-
+  const isMounted = useRef(false);
   const userToken = localStorage.getItem('userToken');
 
   useEffect(() => {
@@ -47,14 +47,19 @@ function Appointment() {
           });
       }
     }
-    datacall();
-  }, [docData._id, docData.doctorData, history, userToken]);
+
+    // Run the effect only once after the initial render
+    if (!isMounted.current) {
+      datacall();
+      isMounted.current = true; // Set ref to true after the initial render
+    }
+  }, [docData.doctorData, docData._id, history, userToken]);
 
   const handleDateChange = (date) => {
-    console.log(date);
+   
     setSessionDate(date);
     const formattedDate = format(date, 'dd-MM-yyyy');
-    console.log(formattedDate);
+    console.log(2,formattedDate);
     
     const list = schedule.filter(
       (el) => el.date.slice(0,10) === formattedDate
