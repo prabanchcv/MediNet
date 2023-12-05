@@ -45,7 +45,7 @@ function Consult() {
                     // Compare the indices to check if the appointment has already passed
                     console.log(el.date);
                     console.log(formattedDate);
-                    const isExpired =  (formattedDate >=el.date || el.time < currentTime);
+                    const isExpired =  (formattedDate >=el.date && el.time < currentTime);
                    
                   
                     console.log('Current Time:', currentTime);
